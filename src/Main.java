@@ -21,6 +21,10 @@ public class Main extends Application {
         pageController.changePage(new Scene(root,500,382.0));
         pageController.setTitle("ONFFLINE");
         primaryStage.show();
+        primaryStage.setOnCloseRequest(event -> {
+            System.exit(1);
+        });
+
     }
 
 
