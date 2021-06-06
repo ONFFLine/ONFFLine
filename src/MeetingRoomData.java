@@ -1,5 +1,6 @@
 public class MeetingRoomData {
     private static int roomId;
+    private static String[] partipantsList;
     private String creator;
 
     public int getRoomId() {
@@ -7,7 +8,7 @@ public class MeetingRoomData {
     }
 
     public void setRoomId(int roomId) {
-        this.roomId = roomId;
+        MeetingRoomData.roomId = roomId;
     }
 
     public String getCreator() {
@@ -16,5 +17,13 @@ public class MeetingRoomData {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public String[] getPartipantsList() {
+        return partipantsList;
+    }
+
+    public void setPartipantsList(String[] partipantsList) {
+        MeetingRoomData.partipantsList = partipantsList;
     }
 }

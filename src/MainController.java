@@ -16,6 +16,8 @@ public class MainController {
     @FXML
     private Button goCustomizeButton;
     @FXML
+    private Button joinTeamButton;
+    @FXML
     private Button acceptButton;
     @FXML
     private Button cancelButton;
@@ -24,6 +26,11 @@ public class MainController {
     private void buttonClicked(MouseEvent event) throws IOException {
         if(event.getSource().equals(createRoomButton)) {
 
+            UserData userData = new UserData();
+            DBHandler dbHandler = new DBHandler();
+            MeetingRoomData roomData = new MeetingRoomData();
+            int roomId = dbHandler.createRoom(userData);
+            roomData.setRoomId(roomId);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MeetingRoomView.fxml"));
             Parent root = (Parent) loader.load();
             Stage stage = new Stage();
@@ -40,9 +47,16 @@ public class MainController {
             stage.setScene(new Scene(root));
             stage.show();
         }
-        if(event.getSource().equals(acceptButton)) {
+        if(event.getSource().equals(joinTeamButton)) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("JoinRoomView.fxml"));
+            Parent root = (Parent) loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Join to Meeting room");
+            stage.setScene(new Scene(root));
+            stage.show();
 
         }
+
         if(event.getSource().equals(cancelButton)) {
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.close();

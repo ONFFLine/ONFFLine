@@ -18,9 +18,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class MeetingRoomController{
@@ -33,7 +31,7 @@ public class MeetingRoomController{
     private MeetingRoomData roomData;
 
     @FXML
-    private ListView partList;
+    private ListView<String> partList;
 
     private DaemonThread myThread = null;
     int count = 0;
@@ -47,12 +45,20 @@ public class MeetingRoomController{
         public void run(){
 
             DBHandler dbHandler = new DBHandler();
-            String list = dbHandler.getParticipantsList(roomData.getRoomId());
-            Gson gson = new Gson();
-            String[] array = gson.fromJson(list, String[].class);
-            ObservableList<String> parts = FXCollections.observableArrayList(array);
-            System.out.println(list);
-            partList.setItems(parts);
+            while(true){
+                String list = dbHandler.getParticipantsList(roomData.getRoomId());
+                Gson gson = new Gson();
+                roomData.setPartipantsList(gson.fromJson(list, String[].class));
+
+                ObservableList<String> parts = FXCollections.observableArrayList(roomData.getPartipantsList());
+                System.out.println(list);
+                partList.setItems(parts);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+
+                }
+            }
 
         }
     }
@@ -65,19 +71,13 @@ public class MeetingRoomController{
         }
     }
 
-
     public MeetingRoomController() {
 
 
         // Check if video capturing is enabled
-        UserData userData = new UserData();
-        DBHandler dbHandler = new DBHandler();
+
+
         roomData = new MeetingRoomData();
-        int roomId = dbHandler.createRoom(userData);
-        System.out.println(roomId);
-        roomData.setRoomId(roomId);
-
-
         webSource = new VideoCapture(0);
         myThread = new DaemonThread();
         Thread t = new Thread(myThread);

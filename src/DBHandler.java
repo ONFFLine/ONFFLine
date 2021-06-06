@@ -29,6 +29,46 @@ public class DBHandler {
         return roomId;
     }
 
+    public boolean checkRoomId(int roomid){
+        ApiInterface api = retrofit.create(ApiInterface.class);
+        Call<String> checkResult = api.checkroomId(roomid);
+
+        boolean isVal = false;
+        try {
+            String response = checkResult.execute().body();
+            if(response.equals("1")){
+                isVal=true;
+            } else {
+                isVal = false;
+            }
+
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return isVal;
+    }
+
+    public void joinMeetingRoom(int roomid, String userid, String nickName) {
+
+        ApiInterface api = retrofit.create(ApiInterface.class);
+        Call<Void> joinResult = api.joinRoom(roomid,userid,nickName);
+
+        joinResult.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()) {
+                    //정상적으로 통신에 성공했을 경우
+                } else {
+                    //정상적으로 값을 받아오지 못한 경우
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+            }
+        });
+    }
+
     public void saveCustoms(CustomData customData) {
 
         UserData userData = new UserData();

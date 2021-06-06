@@ -9,7 +9,6 @@ public interface ApiInterface {
     Call<Void> updateCustom(@Field("uid") String userId, @Field("hairShape") String hairShape, @Field("hairColor") String hairColor, @Field("eyeColor") String eyeColor,
                             @Field("skinColor") String skinColor);
 
-
     @FormUrlEncoded
     @POST("createroom.php")
     Call<String> createRoom(@Field("uid") String userId);
@@ -17,4 +16,12 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("getPartList.php")
     Call<String> getPartList(@Field("rid") int roomId);
+
+    @FormUrlEncoded
+    @POST("checkroomid.php")
+    Call<String> checkroomId(@Field("rid") int roomId);
+
+    @FormUrlEncoded
+    @POST("joinRoom.php")
+    Call<Void> joinRoom(@Field("rid") int roomId, @Field("uid") String userId, @Field("nick") String nickName);
 }
