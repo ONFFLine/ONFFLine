@@ -36,10 +36,9 @@ public class JoinRoomController {
         }
         else if(event.getSource().equals(joinButton)) {
             int roomId = Integer.parseInt(roomfield.getText());
-            String userId = userfield.getText();
-            String nickName = nickfield.getText();
-
-            System.out.println("roomId : " + roomId + "userId : " + userId + "nick : " + nickName);
+            UserData userData = new UserData();
+            String userId = userData.getUserId();
+            String nickName = userData.getNickName();
 
             MeetingRoomData roomData = new MeetingRoomData();
 
@@ -50,9 +49,6 @@ public class JoinRoomController {
                 String creator = dbHandler.joinMeetingRoom(roomId,userId,nickName);
                 roomData.setRoomId(roomId);
                 roomData.setCreator(creator);
-                UserData userData = new UserData();
-                userData.setUserId(userId);
-                userData.setNickName(nickName);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MeetingRoomView.fxml"));
                 Parent root = (Parent) loader.load();
                 PageController pageController = new PageController();
