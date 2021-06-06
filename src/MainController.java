@@ -28,6 +28,8 @@ public class MainController {
 
             UserData userData = new UserData();
             DBHandler dbHandler = new DBHandler();
+            userData.setUserId("hjuhyjmj");
+            userData.setNickName("polar boar");
             MeetingRoomData roomData = new MeetingRoomData();
             int roomId = dbHandler.createRoom(userData);
             roomData.setRoomId(roomId);

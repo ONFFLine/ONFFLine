@@ -23,5 +23,9 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("joinRoom.php")
-    Call<Void> joinRoom(@Field("rid") int roomId, @Field("uid") String userId, @Field("nick") String nickName);
+    Call<String> joinRoom(@Field("rid") int roomId, @Field("uid") String userId, @Field("nick") String nickName);
+
+    @FormUrlEncoded
+    @POST("leaveRoom.php")
+    Call<Void> leaveRoom(@Field("rid") int roomId, @Field("uid") String userId);
 }

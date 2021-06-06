@@ -44,8 +44,12 @@ public class JoinRoomController {
             boolean isVal = dbHandler.checkRoomId(roomId);
             System.out.println(isVal);
             if(isVal){
-                dbHandler.joinMeetingRoom(roomId,userId,nickName);
+                String creator = dbHandler.joinMeetingRoom(roomId,userId,nickName);
                 roomData.setRoomId(roomId);
+                roomData.setCreator(creator);
+                UserData userData = new UserData();
+                userData.setUserId(userId);
+                userData.setNickName(nickName);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MeetingRoomView.fxml"));
                 Parent root = (Parent) loader.load();
                 Stage stage = new Stage();

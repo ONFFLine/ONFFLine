@@ -37,6 +37,7 @@ public class MeetingRoomController{
     @FXML
     private ListView<String> partList;
 
+    participantsUpdater updater = null;
     private DaemonThread myThread = null;
     int count = 0;
     VideoCapture webSource = null;
@@ -50,14 +51,16 @@ public class MeetingRoomController{
 
             DBHandler dbHandler = new DBHandler();
             ObservableList<String> parts;
-            while(true){
+            while(!Thread.currentThread().isInterrupted()){
                 String list = dbHandler.getParticipantsList(roomData.getRoomId());
                 Gson gson = new Gson();
                 roomData.setPartipantsList(gson.fromJson(list, String[].class));
 
                 parts= FXCollections.observableArrayList(roomData.getPartipantsList());
                 System.out.println(list);
-                partList.setItems(parts);
+                if(!Thread.currentThread().isInterrupted()) {
+                    partList.setItems(parts);
+                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -71,6 +74,11 @@ public class MeetingRoomController{
     @FXML
     private void buttonClicked(MouseEvent event) throws IOException {
         if(event.getSource().equals(exitButton)) {
+            DBHandler dbHandler = new DBHandler();
+            UserData userData = new UserData();
+            dbHandler.leaveMeetingRoom(roomData.getRoomId(),userData.getUserId());
+            updater.interrupt();
+            updater.stop();
             Stage stage = (Stage) exitButton.getScene().getWindow();
             stage.close();
         }
@@ -89,9 +97,8 @@ public class MeetingRoomController{
         t.setDaemon(true);
         myThread.runnable = true;
         t.start();
-        participantsUpdater updater = new participantsUpdater();
-        Thread tt = new Thread(updater);
-        tt.start();
+        updater = new participantsUpdater();
+        updater.start();
 
         String path = System.getProperty("user.dir");
         System.out.println("Working Directory = " + path);
@@ -140,6 +147,8 @@ public class MeetingRoomController{
                                 Imgproc.equalizeHist(frameGray, frameGray);
                                 // -- Detect faces
                                 MatOfRect faces = new MatOfRect();
+                                Mat frameimg = new Mat();
+                                frameimg = Imgcodecs.imread("assets/diffuse_fox_v2.jpg");
 
                                 faceCascade.detectMultiScale(frameGray, faces);
                                 java.util.List<Rect> listOfFaces = faces.toList();
@@ -155,6 +164,9 @@ public class MeetingRoomController{
                                     for (Rect eye : listOfEyes) {
                                         org.opencv.core.Point eyeCenter = new Point(face.x + eye.x + eye.width / 2, face.y + eye.y + eye.height / 2);
                                         int radius = (int) Math.round((eye.width + eye.height) * 0.25);
+
+
+
                                         Imgproc.circle(frame, eyeCenter, radius, new Scalar(255, 0, 0), 4);
                                     }
                                 }

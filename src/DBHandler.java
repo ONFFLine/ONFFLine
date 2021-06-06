@@ -48,12 +48,28 @@ public class DBHandler {
         return isVal;
     }
 
-    public void joinMeetingRoom(int roomid, String userid, String nickName) {
+    public String joinMeetingRoom(int roomid, String userid, String nickName) {
 
         ApiInterface api = retrofit.create(ApiInterface.class);
-        Call<Void> joinResult = api.joinRoom(roomid,userid,nickName);
+        Call<String> joinResult = api.joinRoom(roomid,userid,nickName);
 
-        joinResult.enqueue(new Callback<Void>() {
+        String response=null;
+        try {
+            response = joinResult.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    public void saveCustoms(CustomData customData) {
+
+        UserData userData = new UserData();
+
+        ApiInterface api = retrofit.create(ApiInterface.class);
+        Call<Void> customUpdateResult = api.updateCustom(userData.getUserId(),customData.getHairShape(),customData.getHairColor(), customData.getEyeColor(),customData.getSkinColor());
+
+        customUpdateResult.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()) {
@@ -67,14 +83,15 @@ public class DBHandler {
             public void onFailure(Call<Void> call, Throwable t) {
             }
         });
+
     }
 
-    public void saveCustoms(CustomData customData) {
-
-        UserData userData = new UserData();
+    public void leaveMeetingRoom(int roomId, String userId) {
 
         ApiInterface api = retrofit.create(ApiInterface.class);
-        Call<Void> customUpdateResult = api.updateCustom(userData.getUserId(),customData.getHairShape(),customData.getHairColor(), customData.getEyeColor(),customData.getSkinColor());
+        Call<Void> customUpdateResult = api.leaveRoom(roomId,userId);
+        System.out.println(roomId);
+        System.out.println(userId);
 
         customUpdateResult.enqueue(new Callback<Void>() {
             @Override
