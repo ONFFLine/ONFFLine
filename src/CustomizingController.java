@@ -46,9 +46,9 @@ public class CustomizingController implements Initializable {
 
 
     ObservableList<String> hairShapeList = FXCollections.observableArrayList("삭발","긴머리","짧은머리");
-    ObservableList<String> hairColorList = FXCollections.observableArrayList("마젠타","블랙","앞머리염색");
+    ObservableList<String> hairColorList = FXCollections.observableArrayList("마젠타","블랙");
     ObservableList<String> eyeColorList = FXCollections.observableArrayList("초록","블랙","파랑");
-    ObservableList<String> skinColorList = FXCollections.observableArrayList("황","흰색","블랙","초록색");
+    ObservableList<String> skinColorList = FXCollections.observableArrayList("황","흰색","블랙");
 
     public CustomizingController() {
     }
