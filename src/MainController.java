@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 public class MainController {
 
@@ -22,9 +23,7 @@ public class MainController {
     @FXML
     private void buttonClicked(MouseEvent event) throws IOException {
         if(event.getSource().equals(createRoomButton)) {
-            UserData userData = new UserData();
-            DBHandler dbHandler = new DBHandler();
-            dbHandler.createRoom(userData.getUserId());
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MeetingRoomView.fxml"));
             Parent root = (Parent) loader.load();
             Stage stage = new Stage();

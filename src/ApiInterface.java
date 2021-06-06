@@ -12,5 +12,9 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("createroom.php")
-    Call<Void> createRoom(@Field("uid") String userId);
+    Call<String> createRoom(@Field("uid") String userId);
+
+    @FormUrlEncoded
+    @POST("getPartList.php")
+    Call<String> getPartList(@Field("rid") int roomId);
 }
