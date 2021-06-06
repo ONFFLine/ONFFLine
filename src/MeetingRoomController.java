@@ -9,9 +9,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
+import org.opencv.core.*;
+import org.opencv.core.Point;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 
 import javax.imageio.ImageIO;
@@ -19,6 +22,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 
 
 public class MeetingRoomController{
@@ -45,12 +49,13 @@ public class MeetingRoomController{
         public void run(){
 
             DBHandler dbHandler = new DBHandler();
+            ObservableList<String> parts;
             while(true){
                 String list = dbHandler.getParticipantsList(roomData.getRoomId());
                 Gson gson = new Gson();
                 roomData.setPartipantsList(gson.fromJson(list, String[].class));
 
-                ObservableList<String> parts = FXCollections.observableArrayList(roomData.getPartipantsList());
+                parts= FXCollections.observableArrayList(roomData.getPartipantsList());
                 System.out.println(list);
                 partList.setItems(parts);
                 try {
@@ -88,6 +93,9 @@ public class MeetingRoomController{
         Thread tt = new Thread(updater);
         tt.start();
 
+        String path = System.getProperty("user.dir");
+        System.out.println("Working Directory = " + path);
+
 
 
     }
@@ -97,7 +105,7 @@ public class MeetingRoomController{
         protected volatile boolean runnable = false;
 
         @Override
-        public  void run()
+        public void run()
         {
             synchronized(this)
             {
@@ -107,12 +115,56 @@ public class MeetingRoomController{
                     {
                         try
                         {
-                            webSource.retrieve(frame);
-                            Imgcodecs.imencode(".bmp", frame, mem);
-                            Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
+                            String filenameFaceCascade = "haarData/haarcascade_frontalface_alt.xml";
+                            String filenameEyesCascade = "haarData/haarcascade_eye_tree_eyeglasses.xml";
+                            int cameraDevice = 0;
+                            CascadeClassifier faceCascade = new CascadeClassifier();
+                            CascadeClassifier eyesCascade = new CascadeClassifier();
+                            if (!faceCascade.load(filenameFaceCascade)) {
+                                System.err.println("--(!)Error loading face cascade: " + filenameFaceCascade);
+                                System.exit(0);
+                            }
+                            if (!eyesCascade.load(filenameEyesCascade)) {
+                                System.err.println("--(!)Error loading eyes cascade: " + filenameEyesCascade);
+                                System.exit(0);
+                            }
+                            while (webSource.read(frame)) {
+                                if (frame.empty()) {
+                                    System.err.println("--(!) No captured frame -- Break!");
+                                    break;
+                                }
+                                //-- 3. Apply the classifier to the frame
 
-                            BufferedImage buff = (BufferedImage) im;
-                            camView.setImage(SwingFXUtils.toFXImage(buff, null));
+                                Mat frameGray = new Mat();
+                                Imgproc.cvtColor(frame, frameGray, Imgproc.COLOR_BGR2GRAY);
+                                Imgproc.equalizeHist(frameGray, frameGray);
+                                // -- Detect faces
+                                MatOfRect faces = new MatOfRect();
+
+                                faceCascade.detectMultiScale(frameGray, faces);
+                                java.util.List<Rect> listOfFaces = faces.toList();
+                                for (Rect face : listOfFaces) {
+                                    org.opencv.core.Point center = new org.opencv.core.Point(face.x + face.width / 2, face.y + face.height / 2);
+                                    Imgproc.ellipse(frame, center, new Size(face.width / 2, face.height / 2), 0, 0, 360,
+                                            new Scalar(255, 0, 255));
+                                    Mat faceROI = frameGray.submat(face);
+                                    // -- In each face, detect eyes
+                                    MatOfRect eyes = new MatOfRect();
+                                    eyesCascade.detectMultiScale(faceROI, eyes);
+                                    List<Rect> listOfEyes = eyes.toList();
+                                    for (Rect eye : listOfEyes) {
+                                        org.opencv.core.Point eyeCenter = new Point(face.x + eye.x + eye.width / 2, face.y + eye.y + eye.height / 2);
+                                        int radius = (int) Math.round((eye.width + eye.height) * 0.25);
+                                        Imgproc.circle(frame, eyeCenter, radius, new Scalar(255, 0, 0), 4);
+                                    }
+                                }
+
+                                Imgcodecs.imencode(".bmp", frame, mem);
+                                Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
+                                BufferedImage buff = (BufferedImage) im;
+                                camView.setImage(SwingFXUtils.toFXImage(buff, null));
+                            }
+
 
                             if(runnable == false)
                             {
