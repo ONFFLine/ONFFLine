@@ -13,9 +13,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
+        PageController pageController = new PageController();
+
+        PageController.setWindow(primaryStage);
+
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainView.fxml")));
-        primaryStage.setTitle("ONFFLINE");
-        primaryStage.setScene(new Scene(root, 500, 275));
+        pageController.changePage(new Scene(root,500,382.0));
+        pageController.setTitle("ONFFLINE");
         primaryStage.show();
     }
 

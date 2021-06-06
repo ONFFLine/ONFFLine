@@ -2,7 +2,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.paint.Color;
@@ -11,7 +14,9 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class CustomizingController implements Initializable {
@@ -90,7 +95,7 @@ public class CustomizingController implements Initializable {
     }
 
     @FXML
-    private void saveOptions() {
+    private void saveOptions() throws IOException {
         String hairShape = hairShapeOption.getValue();
         String hairColor = hairColorOption.getValue();
         String eyeColor = eyeColorOption.getValue();
@@ -99,6 +104,10 @@ public class CustomizingController implements Initializable {
         CustomData customData = new CustomData(hairShape, hairColor, eyeColor, skinColor);
 
         dbHandler.saveCustoms(customData);
+        PageController pageController = new PageController();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainView.fxml")));
+        pageController.setTitle("ONFFLINE");
+        pageController.changePage(new Scene(root,500,382.0));
     }
 
     @Override

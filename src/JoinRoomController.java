@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class JoinRoomController {
     @FXML
@@ -28,8 +29,10 @@ public class JoinRoomController {
     @FXML
     private void buttonClicked(MouseEvent event) throws IOException {
         if(event.getSource().equals(cancelButton)) {
-            Stage stage = (Stage) cancelButton.getScene().getWindow();
-            stage.close();
+            PageController pageController = new PageController();
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainView.fxml")));
+            pageController.setTitle("ONFFLINE");
+            pageController.changePage(new Scene(root,500,382.0));
         }
         else if(event.getSource().equals(joinButton)) {
             int roomId = Integer.parseInt(roomfield.getText());
@@ -52,11 +55,9 @@ public class JoinRoomController {
                 userData.setNickName(nickName);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MeetingRoomView.fxml"));
                 Parent root = (Parent) loader.load();
-                Stage stage = new Stage();
-                stage.setTitle("Meeting Room");
-                stage.setScene(new Scene(root));
-                stage.show();
-
+                PageController pageController = new PageController();
+                pageController.setTitle("Meeting room");
+                pageController.changePage(new Scene(root));
             }
 
 

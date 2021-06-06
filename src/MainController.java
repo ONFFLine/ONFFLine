@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class MainController {
 
@@ -35,33 +36,31 @@ public class MainController {
             roomData.setRoomId(roomId);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MeetingRoomView.fxml"));
             Parent root = (Parent) loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Meeting Room");
-            stage.setScene(new Scene(root));
-            stage.show();
+            PageController pageController = new PageController();
+            pageController.setTitle("Meeting Room");
+            pageController.changePage(new Scene(root));
         }
         if(event.getSource().equals(goCustomizeButton)) {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomizationView.fxml"));
             Parent root = (Parent) loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Customizing");
-            stage.setScene(new Scene(root));
-            stage.show();
+            PageController pageController = new PageController();
+            pageController.setTitle("Customizing");
+            pageController.changePage(new Scene(root));
         }
         if(event.getSource().equals(joinTeamButton)) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("JoinRoomView.fxml"));
             Parent root = (Parent) loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Join to Meeting room");
-            stage.setScene(new Scene(root));
-            stage.show();
-
+            PageController pageController = new PageController();
+            pageController.setTitle("Join to Meeting room");
+            pageController.changePage(new Scene(root));
         }
 
         if(event.getSource().equals(cancelButton)) {
-            Stage stage = (Stage) cancelButton.getScene().getWindow();
-            stage.close();
+            PageController pageController = new PageController();
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainView.fxml")));
+            pageController.setTitle("ONFFLINE");
+            pageController.changePage(new Scene(root,500,382.0));
 
         }
     }
