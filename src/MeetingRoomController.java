@@ -1,5 +1,7 @@
 import com.google.gson.Gson;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -41,6 +43,8 @@ public class MeetingRoomController{
     @FXML
     private ListView<String> partList;
 
+    ObservableList<String> parts;
+
     participantsUpdater updater = null;
     private DaemonThread myThread = null;
     int count = 0;
@@ -53,18 +57,20 @@ public class MeetingRoomController{
         @Override
         public void run(){
 
-            DBHandler dbHandler = new DBHandler();
-            ObservableList<String> parts;
             while(!Thread.currentThread().isInterrupted()){
+                DBHandler dbHandler = new DBHandler();
                 String list = dbHandler.getParticipantsList(roomData.getRoomId());
                 Gson gson = new Gson();
                 roomData.setPartipantsList(gson.fromJson(list, String[].class));
-
-                parts= FXCollections.observableArrayList(roomData.getPartipantsList());
+                Platform.runLater(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          parts.setAll(roomData.getPartipantsList());
+                                          partList.setItems(parts);
+                                      }
+                                  }
+                        );
                 System.out.println(list);
-                if(!Thread.currentThread().isInterrupted()) {
-                    partList.setItems(parts);
-                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

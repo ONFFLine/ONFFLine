@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="javafx-fxml" type="repository">
+    <properties maven-id="org.openjfx:javafx-fxml:16" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/javafx-fxml-161.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/javafx-fxml-16-mac1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/javafx-controls-161.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/javafx-controls-16-mac1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/javafx-graphics-161.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/javafx-graphics-16-mac1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/javafx-base-161.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/javafx-base-16-mac1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
