@@ -25,7 +25,7 @@
             <TextField fx:id="nickField" layoutX="277.0" layoutY="47.0" />
             <Label layoutX="212.0" layoutY="19.0" text="User ID" />
             <Label layoutX="196.0" layoutY="52.0" text="Nick Name" />
-            <Button fx:id="saveUser" layoutX="383.0" layoutY="79.0" mnemonicParsing="false" onMouseClicked="#buttonClicked" text="Button" />
+            <Button fx:id="saveUser" layoutX="383.0" layoutY="79.0" mnemonicParsing="false" onMouseClicked="#buttonClicked" text="Set User" />
          </children>
       </AnchorPane>
    </children>

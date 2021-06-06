@@ -1,8 +1,8 @@
 public class CustomData {
-    private String hairShape;
-    private String hairColor;
-    private String eyeColor;
-    private String skinColor;
+    private static String hairShape;
+    private static String hairColor;
+    private static String eyeColor;
+    private static String skinColor;
 
     public String getHairShape() {
         return hairShape;

@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import org.opencv.core.*;
@@ -47,6 +48,7 @@ public class MeetingRoomController{
 
     participantsUpdater updater = null;
     private DaemonThread myThread = null;
+    Thread t=null;
     int count = 0;
     VideoCapture webSource = null;
     Mat frame = new Mat();
@@ -59,16 +61,16 @@ public class MeetingRoomController{
 
             while(!Thread.currentThread().isInterrupted()){
                 DBHandler dbHandler = new DBHandler();
+                System.out.println(roomData.getRoomId());
                 String list = dbHandler.getParticipantsList(roomData.getRoomId());
                 Gson gson = new Gson();
                 roomData.setPartipantsList(gson.fromJson(list, String[].class));
                 Platform.runLater(new Runnable() {
-                                      @Override
-                                      public void run() {
-                                          parts.setAll(roomData.getPartipantsList());
-                                          partList.setItems(parts);
-                                      }
-                                  }
+                                  @Override
+                                  public void run() {
+                                      parts.setAll(roomData.getPartipantsList());
+                                      partList.setItems(parts);
+                                  }}
                         );
                 System.out.println(list);
                 try {
@@ -89,6 +91,7 @@ public class MeetingRoomController{
             dbHandler.leaveMeetingRoom(roomData.getRoomId(),userData.getUserId());
             updater.interrupt();
             updater.stop();
+            t.stop();
             PageController pageController = new PageController();
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainView.fxml")));
             pageController.setTitle("ONFFLINE");
@@ -103,9 +106,14 @@ public class MeetingRoomController{
 
 
         roomData = new MeetingRoomData();
+        DBHandler dbHandler = new DBHandler();
+        String list = dbHandler.getParticipantsList(roomData.getRoomId());
+        Gson gson = new Gson();
+        roomData.setPartipantsList(gson.fromJson(list, String[].class));
+        parts = FXCollections.observableArrayList(roomData.getPartipantsList());
         webSource = new VideoCapture(0);
         myThread = new DaemonThread();
-        Thread t = new Thread(myThread);
+        t = new Thread(myThread);
         t.setDaemon(true);
         myThread.runnable = true;
         t.start();
@@ -113,7 +121,6 @@ public class MeetingRoomController{
         updater.start();
 
         String path = System.getProperty("user.dir");
-        System.out.println("Working Directory = " + path);
 
 
 
@@ -136,15 +143,21 @@ public class MeetingRoomController{
                         {
                             String filenameFaceCascade = "haarData/haarcascade_frontalface_alt.xml";
                             String filenameEyesCascade = "haarData/haarcascade_eye_tree_eyeglasses.xml";
+                            String filenameMouthCascade = "haarData/haarcascade_mcs_mouth.xml";
                             int cameraDevice = 0;
                             CascadeClassifier faceCascade = new CascadeClassifier();
                             CascadeClassifier eyesCascade = new CascadeClassifier();
+                            CascadeClassifier mouthCascade = new CascadeClassifier();
                             if (!faceCascade.load(filenameFaceCascade)) {
                                 System.err.println("--(!)Error loading face cascade: " + filenameFaceCascade);
                                 System.exit(0);
                             }
                             if (!eyesCascade.load(filenameEyesCascade)) {
                                 System.err.println("--(!)Error loading eyes cascade: " + filenameEyesCascade);
+                                System.exit(0);
+                            }
+                            if (!mouthCascade.load(filenameMouthCascade)) {
+                                System.err.println("--(!)Error loading eyes cascade: " + filenameMouthCascade);
                                 System.exit(0);
                             }
                             while (webSource.read(frame)) {
@@ -166,21 +179,22 @@ public class MeetingRoomController{
                                 java.util.List<Rect> listOfFaces = faces.toList();
                                 for (Rect face : listOfFaces) {
                                     org.opencv.core.Point center = new org.opencv.core.Point(face.x + face.width / 2, face.y + face.height / 2);
-                                    Imgproc.ellipse(frame, center, new Size(face.width / 2, face.height / 2), 0, 0, 360,
-                                            new Scalar(255, 0, 255));
+                                    Imgproc.ellipse(frame, center, new Size(face.width / 2.0, face.height/2.0 ), 0, 0, 360,
+                                            new Scalar(255, 0,255),-1);
                                     Mat faceROI = frameGray.submat(face);
                                     // -- In each face, detect eyes
                                     MatOfRect eyes = new MatOfRect();
                                     eyesCascade.detectMultiScale(faceROI, eyes);
                                     List<Rect> listOfEyes = eyes.toList();
                                     for (Rect eye : listOfEyes) {
-                                        org.opencv.core.Point eyeCenter = new Point(face.x + eye.x + eye.width / 2, face.y + eye.y + eye.height / 2);
+                                        org.opencv.core.Point eyeCenter = new Point(face.x + eye.x + eye.width / 2.0, face.y + eye.y + eye.height / 2.0);
                                         int radius = (int) Math.round((eye.width + eye.height) * 0.25);
 
 
 
-                                        Imgproc.circle(frame, eyeCenter, radius, new Scalar(255, 0, 0), 4);
+                                        Imgproc.ellipse(frame, eyeCenter, new Size(eye.width/2.0, eye.height/2.0),0,0,360, new Scalar(255, 0, 0), -1);
                                     }
+
                                 }
 
                                 Imgcodecs.imencode(".bmp", frame, mem);
