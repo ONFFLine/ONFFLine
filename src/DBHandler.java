@@ -10,6 +10,31 @@ import java.net.URL;
 
 public class DBHandler {
     private final Retrofit retrofit;
+
+    public void createRoom(String userid){
+        ApiInterface api = retrofit.create(ApiInterface.class);
+        Call<Void> createRoomResult = api.createRoom(userid);
+
+        createRoomResult.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()) {
+                    //정상적으로 통신에 성공했을 경우
+                    System.out.println("success");
+                } else {
+                    //정상적으로 값을 받아오지 못한 경우
+                    System.out.println(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+                System.out.println("fail");
+
+            }
+        });
+    }
+
     public void saveCustoms(CustomData customData) {
 
         UserData userData = new UserData();

@@ -23,9 +23,24 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="mysql-connector-java-8.0.25" level="project" />
     <orderEntry type="library" name="retrofit-2.9.0" level="project" />
     <orderEntry type="library" name="com.squareup.okhttp3:okhttp:4.9.0" level="project" />
+    <orderEntry type="library" name="opencv-452" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../javafx-sdk-16/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <NATIVE>
+          <root url="file://$MODULE_DIR$/../javafx-sdk-16/lib" />
+        </NATIVE>
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../javafx-sdk-16/lib" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../javafx-sdk-16/lib" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../javafx-sdk-16/lib" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>

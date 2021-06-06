@@ -8,4 +8,9 @@ public interface ApiInterface {
     @POST("custom.php")
     Call<Void> updateCustom(@Field("uid") String userId, @Field("hairShape") String hairShape, @Field("hairColor") String hairColor, @Field("eyeColor") String eyeColor,
                             @Field("skinColor") String skinColor);
+
+
+    @FormUrlEncoded
+    @POST("createroom.php")
+    Call<Void> createRoom(@Field("uid") String userId);
 }
