@@ -49,7 +49,6 @@ public class MeetingRoomController{
     participantsUpdater updater = null;
     private DaemonThread myThread = null;
     Thread t=null;
-    int count = 0;
     VideoCapture webSource = null;
     Mat frame = new Mat();
     MatOfByte mem = new MatOfByte(); /// start button
@@ -61,7 +60,6 @@ public class MeetingRoomController{
 
             while(!Thread.currentThread().isInterrupted()){
                 DBHandler dbHandler = new DBHandler();
-                System.out.println(roomData.getRoomId());
                 String list = dbHandler.getParticipantsList(roomData.getRoomId());
                 Gson gson = new Gson();
                 roomData.setPartipantsList(gson.fromJson(list, String[].class));
@@ -72,7 +70,6 @@ public class MeetingRoomController{
                                       partList.setItems(parts);
                                   }}
                         );
-                System.out.println(list);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

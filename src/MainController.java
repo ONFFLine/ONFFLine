@@ -43,9 +43,6 @@ public class MainController {
         }
         if(event.getSource().equals(goCustomizeButton)) {
 
-            UserData userData = new UserData();
-            userData.setUserId("hjuhyjmj");
-            userData.setNickName("polar boar");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomizationView.fxml"));
             Parent root = (Parent) loader.load();
             PageController pageController = new PageController();

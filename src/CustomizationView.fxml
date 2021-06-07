@@ -13,7 +13,7 @@
 <AnchorPane prefHeight="263.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CustomizingController">
    <children>
       <Rectangle fx:id="downHair" arcHeight="5.0" arcWidth="5.0" height="200.0" layoutX="353.0" layoutY="123.0" stroke="BLACK" strokeType="INSIDE" width="136.0" />
-      <ComboBox fx:id="hairShapeOption" layoutX="170.0" layoutY="63.0" prefWidth="150.0" />
+      <ComboBox fx:id="hairShapeOption" layoutX="170.0" layoutY="63.0" onAction="#itemChanged" prefWidth="150.0" />
       <Label layoutX="63.0" layoutY="68.0" text="Hair Shape" />
       <ComboBox fx:id="hairColorOption" layoutX="170.0" layoutY="101.0" onAction="#itemChanged" prefWidth="150.0" />
       <Label layoutX="63.0" layoutY="106.0" text="Hair Color" />

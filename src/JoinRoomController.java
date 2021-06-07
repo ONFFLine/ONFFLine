@@ -44,7 +44,6 @@ public class JoinRoomController {
 
             DBHandler dbHandler = new DBHandler();
             boolean isVal = dbHandler.checkRoomId(roomId);
-            System.out.println(isVal);
             if(isVal){
                 String creator = dbHandler.joinMeetingRoom(roomId,userId,nickName);
                 roomData.setRoomId(roomId);

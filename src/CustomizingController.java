@@ -91,6 +91,22 @@ public class CustomizingController implements Initializable {
                 color = Color.WHITESMOKE;
             skin.setFill(color);
         }
+        if(actionEvent.getSource().equals(hairShapeOption)) {
+            String t = hairShapeOption.getValue();
+
+            if(t.equals("삭발")){
+                upHair.setVisible(false);
+                downHair.setVisible(false);
+            }
+            if(t.equals("긴머리")) {
+                upHair.setVisible(true);
+                downHair.setVisible(true);
+            }
+            if(t.equals("짧은머리")) {
+                upHair.setVisible(true);
+                downHair.setVisible(false);
+            }
+        }
 
     }
 

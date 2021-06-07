@@ -90,8 +90,6 @@ public class DBHandler {
 
         ApiInterface api = retrofit.create(ApiInterface.class);
         Call<Void> customUpdateResult = api.leaveRoom(roomId,userId);
-        System.out.println(roomId);
-        System.out.println(userId);
 
         customUpdateResult.enqueue(new Callback<Void>() {
             @Override
