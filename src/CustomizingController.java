@@ -41,7 +41,6 @@ public class CustomizingController implements Initializable {
     @FXML
     private Ellipse rightEye;
 
-    private DBHandler dbHandler;
 
 
 
@@ -117,6 +116,7 @@ public class CustomizingController implements Initializable {
         String eyeColor = eyeColorOption.getValue();
         String skinColor = skinColorOption.getValue();
 
+        DBHandler dbHandler = new DBHandler();
         CustomData customData = new CustomData(hairShape, hairColor, eyeColor, skinColor);
 
         dbHandler.saveCustoms(customData);
@@ -133,6 +133,5 @@ public class CustomizingController implements Initializable {
         hairColorOption.setItems(hairColorList);
         eyeColorOption.setItems(eyeColorList);
         skinColorOption.setItems(skinColorList);
-        dbHandler = new DBHandler();
     }
 }
